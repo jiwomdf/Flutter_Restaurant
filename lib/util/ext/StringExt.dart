@@ -6,4 +6,8 @@ extension ExtString on String {
       return "$this..";
     }
   }
+
+  bool containsIgnoreCase(String str) {
+    return toLowerCase().contains(str.toLowerCase());
+  }
 }

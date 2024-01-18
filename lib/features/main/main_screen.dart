@@ -1,10 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fundamental_beginner_restourant/features/main/restaurant_provider.dart';
+import 'package:fundamental_beginner_restourant/util/ext/StringExt.dart';
 import 'package:provider/provider.dart';
-import '../../domain/data/api/api_service.dart';
 import '../../domain/entities/restaurant_element.dart';
-import '../../util/state/ResultState.dart';
 import 'list/list_restaurants_container.dart';
+import '../../domain/data/api/api_service.dart';
+import '../../util/state/ResultState.dart';
 
 class MainScreen extends StatefulWidget {
 
@@ -18,6 +20,15 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+
+  Timer? _debounce;
+  String filterStr = "";
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,26 +45,35 @@ class _MainScreenState extends State<MainScreen> {
           child: Column(
             children: [
               _searchBarWidget(),
-              _buildList()
+              _buildList(filterStr)
             ],
           ),
         )
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(String filterStr) {
     return Consumer<RestaurantProvider>(
         builder: (context, state, _) {
           if (state.state == ResultState.loading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state.state == ResultState.hasData) {
+
+            List<Restaurant> listData = [];
+            if(filterStr.isEmpty) {
+              listData = state.result.restaurants;
+            } else {
+              listData = state.result.restaurants
+                  .where((itm) => itm.name.containsIgnoreCase(filterStr)).toList();
+            }
+
             return Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: ListView.builder(
-                  itemCount: state.result.restaurants.length,
+                  itemCount: listData.length,
                   itemBuilder: (context, index) {
-                    return ListRestaurantContainer(restaurant: state.result.restaurants[index]);
+                    return ListRestaurantContainer(restaurant: listData[index]);
                   },
                 ),
               ),
@@ -81,10 +101,19 @@ class _MainScreenState extends State<MainScreen> {
           debugPrint("onTap: taped");
         },
         onChanged: (value) {
-          debugPrint("value: $value");
+          debounceQuery(value);
         },
         leading: const Icon(Icons.search)
     );
+  }
+
+  void debounceQuery(String value) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        filterStr = value;
+      });
+    });
   }
 
 }
