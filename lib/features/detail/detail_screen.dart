@@ -31,7 +31,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 return Scaffold(
                     appBar: AppBar(
                       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                      title: Text(state.state.name),
+                      title: Text(state.result.restaurant?.name ?? "-"),
                     ),
                     body: _detailScreen(state.result)
                 );
@@ -60,7 +60,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     bottomLeft: Radius.circular(10.0),
                     bottomRight: Radius.circular(10.0)),
                 child: CachedNetworkImage(
-                    imageUrl: "${StringUtil.imgMediumUrl}${result.restaurant?.id ?? ""}",
+                    imageUrl: "${StringUtil.imgMediumUrl}${result.restaurant?.pictureId ?? ""}",
                     placeholder: (context, url) =>
                     const CircularProgressIndicator(),
                     errorWidget: (context, url, error) =>
