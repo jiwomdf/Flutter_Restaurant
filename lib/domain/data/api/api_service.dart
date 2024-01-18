@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:fundamental_beginner_restourant/domain/entities/restaurant_detail_element.dart';
 import 'package:http/http.dart' as http;
-
 import '../../entities/restaurant_element.dart';
 
 class ApiService {
@@ -10,6 +10,15 @@ class ApiService {
     final response = await http.get(Uri.parse("$_baseUrl/list"));
     if (response.statusCode == 200) {
       return RestaurantElement.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load top headlines');
+    }
+  }
+
+  Future<RestaurantDetailElement> getRestaurantDetail(String id) async {
+    final response = await http.get(Uri.parse("$_baseUrl/detail/$id"));
+    if (response.statusCode == 200) {
+      return RestaurantDetailElement.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load top headlines');
     }
