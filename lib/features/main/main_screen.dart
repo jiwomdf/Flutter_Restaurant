@@ -48,11 +48,14 @@ class _MainScreenState extends State<MainScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (state.state == ResultState.hasData) {
             return Expanded(
-              child: ListView.builder(
-                itemCount: state.result.restaurants.length,
-                itemBuilder: (context, index) {
-                  return ListRestaurantContainer(restaurant: state.result.restaurants[index]);
-                },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: ListView.builder(
+                  itemCount: state.result.restaurants.length,
+                  itemBuilder: (context, index) {
+                    return ListRestaurantContainer(restaurant: state.result.restaurants[index]);
+                  },
+                ),
               ),
             );
           } else if (state.state == ResultState.noData) {
