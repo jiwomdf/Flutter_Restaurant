@@ -33,7 +33,10 @@ class _DetailScreenState extends State<DetailScreen> {
                       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                       title: Text(state.result.restaurant?.name ?? "-"),
                     ),
-                    body: _detailScreen(state.result)
+                    body: Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: _detailScreen(state.result),
+                    )
                 );
               } else if (state.state == ResultState.noData) {
                 return const Center(child: CircularProgressIndicator());

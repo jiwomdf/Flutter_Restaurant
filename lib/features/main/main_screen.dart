@@ -97,13 +97,12 @@ class _MainScreenState extends State<MainScreen> {
     return SearchBar(
         padding: const MaterialStatePropertyAll<EdgeInsets>(
             EdgeInsets.symmetric(horizontal: 16.0)),
-        onTap: () {
-          debugPrint("onTap: taped");
-        },
+        onTap: () {},
         onChanged: (value) {
           debounceQuery(value);
         },
-        leading: const Icon(Icons.search)
+        leading: const Icon(Icons.search),
+        hintText: "Search Here",
     );
   }
 
