@@ -23,12 +23,20 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          backgroundColor: Theme
+              .of(context)
+              .colorScheme
+              .inversePrimary,
           title: Text(widget.title),
         ),
         body: ChangeNotifierProvider<RestaurantProvider>(
           create: (_) => RestaurantProvider(apiService: widget.apiService),
-          child: _buildList(),
+          child: Column(
+            children: [
+              _searchBarWidget(),
+              _buildList()
+            ],
+          ),
         )
     );
   }
@@ -39,12 +47,13 @@ class _MainScreenState extends State<MainScreen> {
           if (state.state == ResultState.loading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state.state == ResultState.hasData) {
-            return ListView.builder(
-              itemCount: state.result.restaurants.length,
-              itemBuilder: (context, index) {
-                return ListRestaurantContainer(
-                    restaurant: state.result.restaurants[index]);
-              },
+            return Expanded(
+              child: ListView.builder(
+                itemCount: state.result.restaurants.length,
+                itemBuilder: (context, index) {
+                  return ListRestaurantContainer(restaurant: state.result.restaurants[index]);
+                },
+              ),
             );
           } else if (state.state == ResultState.noData) {
             return Center(
@@ -53,19 +62,25 @@ class _MainScreenState extends State<MainScreen> {
               ),
             );
           } else if (state.state == ResultState.error) {
-            return Center(
-              child: Material(
-                child: Text(state.message),
-              ),
-            );
+            return const Center(child: Material(child: Text("There is no internet connection")));
           } else {
-            return const Center(
-              child: Material(
-                child: Text(''),
-              ),
-            );
+            return const Center(child: Material(child: Text('')));
           }
         }
+    );
+  }
+
+  Widget _searchBarWidget() {
+    return SearchBar(
+        padding: const MaterialStatePropertyAll<EdgeInsets>(
+            EdgeInsets.symmetric(horizontal: 16.0)),
+        onTap: () {
+          debugPrint("onTap: taped");
+        },
+        onChanged: (value) {
+          debugPrint("value: $value");
+        },
+        leading: const Icon(Icons.search)
     );
   }
 
