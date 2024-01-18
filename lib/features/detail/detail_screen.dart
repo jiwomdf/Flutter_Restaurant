@@ -66,14 +66,14 @@ class DetailScreen extends StatelessWidget {
                   child: SizedBox(
                       height: 50,
                       child: ListView.builder(
-                          itemCount: restaurant.menus.foods.length,
+                          itemCount: restaurant.menus?.foods.length ?? 0,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
-                            final foods = restaurant.menus.foods[index];
+                            final foods = restaurant.menus?.foods[index];
                             return Padding(
                                 padding:
                                     const EdgeInsets.only(left: 2, right: 2),
-                                child: Chip(label: Text(foods.name)));
+                                child: Chip(label: Text(foods?.name ?? "-")));
                           }))),
               const Padding(
                   padding: EdgeInsets.only(left: 8, top: 8),
@@ -83,13 +83,13 @@ class DetailScreen extends StatelessWidget {
                   child: SizedBox(
                     height: 50,
                     child: ListView.builder(
-                        itemCount: restaurant.menus.drinks.length,
+                        itemCount: restaurant.menus?.drinks.length ?? 0,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          final drink = restaurant.menus.drinks[index];
+                          final drink = restaurant.menus?.drinks[index];
                           return Padding(
                               padding: const EdgeInsets.only(left: 2, right: 2),
-                              child: Chip(label: Text(drink.name)));
+                              child: Chip(label: Text(drink?.name ?? "")));
                         }),
                   )),
               Padding(

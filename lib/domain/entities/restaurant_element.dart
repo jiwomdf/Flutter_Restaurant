@@ -41,7 +41,7 @@ class Restaurant {
   String pictureId;
   String city;
   double rating;
-  Menus menus;
+  Menus? menus;
 
   Restaurant({
     required this.id,
@@ -50,7 +50,7 @@ class Restaurant {
     required this.pictureId,
     required this.city,
     required this.rating,
-    required this.menus,
+    this.menus,
   });
 
   factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
@@ -60,7 +60,7 @@ class Restaurant {
     pictureId: json["pictureId"],
     city: json["city"],
     rating: json["rating"]?.toDouble(),
-    menus: Menus.fromJson(json["menus"]),
+    //menus: Menus.fromJson(json["menus"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -70,7 +70,7 @@ class Restaurant {
     "pictureId": pictureId,
     "city": city,
     "rating": rating,
-    "menus": menus.toJson(),
+    "menus": menus?.toJson(),
   };
 }
 
