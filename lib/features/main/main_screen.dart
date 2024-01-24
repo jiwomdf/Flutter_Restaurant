@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fundamental_beginner_restourant/features/main/restaurant_provider.dart';
-import 'package:fundamental_beginner_restourant/util/ext/StringExt.dart';
 import 'package:provider/provider.dart';
-import '../../domain/entities/restaurant_element.dart';
 import 'list/list_restaurants_container.dart';
 import '../../domain/data/api/api_service.dart';
 import '../../util/state/ResultState.dart';
@@ -22,7 +20,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
 
   Timer? _debounce;
-  String filterStr = "";
+  late final RestaurantProvider _provider;
 
   @override
   void dispose() {
@@ -41,53 +39,49 @@ class _MainScreenState extends State<MainScreen> {
           title: Text(widget.title),
         ),
         body: ChangeNotifierProvider<RestaurantProvider>(
-          create: (_) => RestaurantProvider(apiService: widget.apiService),
+          create: (_) {
+            _provider = RestaurantProvider(apiService: widget.apiService);
+            _provider.fetchRestaurants("");
+            return _provider;
+        },
           child: Column(
             children: [
               _searchBarWidget(),
-              _buildList(filterStr)
+              _buildList()
             ],
           ),
         )
     );
   }
 
-  Widget _buildList(String filterStr) {
+  Widget _buildList() {
     return Consumer<RestaurantProvider>(
         builder: (context, state, _) {
-          if (state.state == ResultState.loading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.state == ResultState.hasData) {
-
-            List<Restaurant> listData = [];
-            if(filterStr.isEmpty) {
-              listData = state.result.restaurants;
-            } else {
-              listData = state.result.restaurants
-                  .where((itm) => itm.name.containsIgnoreCase(filterStr)).toList();
-            }
-
-            return Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: ListView.builder(
-                  itemCount: listData.length,
-                  itemBuilder: (context, index) {
-                    return ListRestaurantContainer(restaurant: listData[index]);
-                  },
+          switch (state.state) {
+            case ResultState.loading:
+              return const Center(child: CircularProgressIndicator());
+            case ResultState.hasData:
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: ListView.builder(
+                    itemCount: state.result.restaurants.length,
+                    itemBuilder: (context, index) {
+                      return ListRestaurantContainer(restaurant: state.result.restaurants[index]);
+                    },
+                  ),
                 ),
-              ),
-            );
-          } else if (state.state == ResultState.noData) {
-            return Center(
-              child: Material(
-                child: Text(state.message),
-              ),
-            );
-          } else if (state.state == ResultState.error) {
-            return const Center(child: Material(child: Text("There is no internet connection")));
-          } else {
-            return const Center(child: Material(child: Text('')));
+              );
+            case ResultState.noData:
+              return Center(
+                child: Material(
+                  child: Text(state.message),
+                ),
+              );
+            case ResultState.error:
+              return const Center(child: Material(child: Text("There is no internet connection")));
+            default:
+              return const Center(child: Material(child: Text('')));
           }
         }
     );
@@ -107,11 +101,12 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void debounceQuery(String value) {
-    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    if (_debounce?.isActive ?? false) {
+      _debounce?.cancel();
+    }
+
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      setState(() {
-        filterStr = value;
-      });
+      _provider.fetchRestaurants(value);
     });
   }
 

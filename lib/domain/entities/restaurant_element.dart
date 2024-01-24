@@ -7,9 +7,9 @@ import 'dart:convert';
 String restaurantElementToJson(RestaurantElement data) => json.encode(data.toJson());
 
 class RestaurantElement {
-  bool error;
-  String message;
-  int count;
+  final bool error;
+  final String message;
+  final int count;
   List<Restaurant> restaurants;
 
   RestaurantElement({
