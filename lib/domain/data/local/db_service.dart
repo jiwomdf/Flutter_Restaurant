@@ -40,12 +40,28 @@ class DbService {
     return results.map((res) => RestaurantEntity.fromJson(res)).toList();
   }
 
-  Future<void> removeRestaurant(int restaurantId) async {
+  Future<dynamic> getRestaurantById(String id) async {
+    final db = await database;
+
+    List<Map<String, dynamic>> results = await db.query(
+      _tableRestaurant,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (results.isNotEmpty) {
+      return results.first;
+    } else {
+      return {};
+    }
+  }
+
+  Future<void> removeRestaurant(String id) async {
     final db = await database;
     await db.delete(
       _tableRestaurant,
       where: 'id = ?',
-      whereArgs: [restaurantId],
+      whereArgs: [id],
     );
   }
 

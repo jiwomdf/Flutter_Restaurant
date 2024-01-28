@@ -7,6 +7,10 @@ class DetailRestaurantProvider extends ChangeNotifier {
   final String id;
   final ApiService apiService;
 
+  DetailRestaurantProvider({required this.id, required this.apiService}) {
+    _fetchDetailRestaurants(id);
+  }
+
   late ResultState _state;
   ResultState get state => _state;
 
@@ -15,11 +19,6 @@ class DetailRestaurantProvider extends ChangeNotifier {
 
   late RestaurantDetailElement _restaurantsResult;
   RestaurantDetailElement get result => _restaurantsResult;
-
-
-  DetailRestaurantProvider({required this.id, required this.apiService}) {
-    _fetchDetailRestaurants(id);
-  }
 
   Future<dynamic> _fetchDetailRestaurants(String id) async {
     try {

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:fundamental_beginner_restourant/domain/data/local/db_service.dart';
 
@@ -33,9 +35,22 @@ class RestaurantDbProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> removeRestaurant(int restaurantId) async {
+  Future<bool> getIsRestaurantFav({required String id}) async {
     try {
-      await dbService.removeRestaurant(restaurantId);
+      final restaurants = await dbService.getRestaurantById(id);
+      if (restaurants.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> removeRestaurant(String id) async {
+    try {
+      await dbService.removeRestaurant(id);
       getRestaurant();
     } catch (e) {
       _state = ResultState.error;

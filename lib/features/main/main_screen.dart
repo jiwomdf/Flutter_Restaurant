@@ -85,11 +85,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               );
             case ResultState.noData:
-              return Center(
-                child: Material(
-                  child: Text(state.message),
-                ),
-              );
+              return Center(child: Material(child: Text(state.message)));
             case ResultState.error:
               return const Center(child: Material(child: Text("There is no internet connection")));
             default:
