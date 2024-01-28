@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:fundamental_beginner_restourant/domain/entities/restaurant_detail_element.dart';
 import '../../domain/data/api/api_service.dart';
+import '../../domain/data/api/response/restaurant_detail_element.dart';
 import '../../util/state/ResultState.dart';
 
 class DetailRestaurantProvider extends ChangeNotifier {

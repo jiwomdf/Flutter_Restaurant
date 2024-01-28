@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:fundamental_beginner_restourant/domain/entities/restaurant_detail_element.dart';
+import 'package:fundamental_beginner_restourant/domain/data/api/response/restaurant_detail_element.dart';
+import 'package:fundamental_beginner_restourant/domain/data/api/response/restaurant_element.dart';
 import 'package:http/http.dart' as http;
-import '../../entities/restaurant_element.dart';
 
 class ApiService {
   static const String _baseUrl = 'https://restaurant-api.dicoding.dev/';

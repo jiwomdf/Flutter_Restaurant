@@ -1,10 +1,9 @@
 
 
 import 'package:flutter/foundation.dart';
-import 'package:fundamental_beginner_restourant/domain/entities/restaurant_element.dart';
 import 'package:fundamental_beginner_restourant/util/ext/StringExt.dart';
-
 import '../../domain/data/api/api_service.dart';
+import '../../domain/data/api/response/restaurant_element.dart';
 import '../../util/state/ResultState.dart';
 
 class RestaurantProvider extends ChangeNotifier {
@@ -20,7 +19,7 @@ class RestaurantProvider extends ChangeNotifier {
   RestaurantElement get result => _restaurantsResult;
 
 
-  RestaurantProvider({required this.apiService}){}
+  RestaurantProvider({required this.apiService});
 
   Future<dynamic> fetchRestaurants(String keyword) async {
     try {

@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:fundamental_beginner_restourant/domain/entities/restaurant_element.dart';
 import 'package:fundamental_beginner_restourant/features/detail/detail_screen.dart';
 import 'package:fundamental_beginner_restourant/util/ext/StringExt.dart';
-
+import '../../../domain/data/api/response/restaurant_element.dart';
 import '../../../util/stringutil/string_util.dart';
 
 class ListRestaurantContainer extends StatelessWidget {

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:fundamental_beginner_restourant/domain/data/local/db_service.dart';
+import 'package:fundamental_beginner_restourant/features/main/restaurant_db_provider.dart';
 import 'package:fundamental_beginner_restourant/features/main/restaurant_provider.dart';
 import 'package:provider/provider.dart';
 import 'list/list_restaurants_container.dart';
@@ -10,8 +12,9 @@ class MainScreen extends StatefulWidget {
 
   final String title;
   final ApiService apiService;
+  final DbService dbService;
 
-  const MainScreen({super.key, required this.title, required this.apiService});
+  const MainScreen({super.key, required this.title, required this.apiService, required this.dbService});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -21,6 +24,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Timer? _debounce;
   late final RestaurantProvider _provider;
+  late final RestaurantDbProvider _dbProvider;
 
   @override
   void dispose() {
@@ -38,12 +42,20 @@ class _MainScreenState extends State<MainScreen> {
               .inversePrimary,
           title: Text(widget.title),
         ),
-        body: ChangeNotifierProvider<RestaurantProvider>(
-          create: (_) {
-            _provider = RestaurantProvider(apiService: widget.apiService);
-            _provider.fetchRestaurants("");
-            return _provider;
-        },
+        body: MultiProvider(
+          providers: [
+            ChangeNotifierProvider<RestaurantProvider>(
+              create: (_) {
+                _provider = RestaurantProvider(apiService: widget.apiService);
+                _provider.fetchRestaurants("");
+                return _provider;
+              },
+            ),
+            ChangeNotifierProvider<RestaurantDbProvider>(create: (_) {
+              _dbProvider = RestaurantDbProvider(dbService: widget.dbService);
+              return _dbProvider;
+            })
+          ],
           child: Column(
             children: [
               _searchBarWidget(),

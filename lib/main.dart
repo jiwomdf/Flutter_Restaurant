@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundamental_beginner_restourant/domain/data/api/api_service.dart';
+import 'package:fundamental_beginner_restourant/domain/data/local/db_service.dart';
 
 import 'features/main/main_screen.dart';
 
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       home: MainScreen(
           title: 'Restaurant App',
           apiService: ApiService(),
+          dbService: DbService(),
       ),
     );
   }

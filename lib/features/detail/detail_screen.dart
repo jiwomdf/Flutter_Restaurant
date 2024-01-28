@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../domain/data/api/response/restaurant_detail_element.dart';
 import 'detail_restaurant_provider.dart';
 import '../../domain/data/api/api_service.dart';
-import '../../domain/entities/restaurant_detail_element.dart';
 import '../../util/state/ResultState.dart';
 import '../../util/stringutil/string_util.dart';
 
@@ -16,38 +16,35 @@ class DetailScreen extends StatefulWidget {
   State<DetailScreen> createState() => _DetailScreenState();
 }
 
-
 class _DetailScreenState extends State<DetailScreen> {
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<DetailRestaurantProvider>(
-        create: (_) => DetailRestaurantProvider(id: widget.id, apiService: ApiService()),
-        child: Consumer<DetailRestaurantProvider>(
-            builder: (context, state, _) {
-              if (state.state == ResultState.loading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state.state == ResultState.hasData) {
-                return Scaffold(
-                    appBar: AppBar(
-                      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                      title: Text(state.result.restaurant?.name ?? "-"),
-                    ),
-                    body: Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: _detailScreen(state.result),
-                    )
-                );
-              } else if (state.state == ResultState.noData) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state.state == ResultState.error) {
-                return const Center(child: Material(child: Text("There is no internet connection")));
-              } else {
-                return const Center(child: Material(child: Text('')));
-              }
-            }
-        )
-    );
+        create: (_) =>
+            DetailRestaurantProvider(id: widget.id, apiService: ApiService()),
+        child: Consumer<DetailRestaurantProvider>(builder: (context, state, _) {
+          if (state.state == ResultState.loading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state.state == ResultState.hasData) {
+            return Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                  title: Text(state.result.restaurant?.name ?? "-"),
+                ),
+                body: Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: _detailScreen(state.result),
+                ));
+          } else if (state.state == ResultState.noData) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state.state == ResultState.error) {
+            return const Center(
+                child:
+                    Material(child: Text("There is no internet connection")));
+          } else {
+            return const Center(child: Material(child: Text('')));
+          }
+        }));
   }
 
   Widget _detailScreen(RestaurantDetailElement result) {
@@ -56,19 +53,29 @@ class _DetailScreenState extends State<DetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(10.0),
-                    bottomRight: Radius.circular(10.0)),
-                child: CachedNetworkImage(
-                    imageUrl: "${StringUtil.imgMediumUrl}${result.restaurant?.pictureId ?? ""}",
-                    placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                    const Icon(Icons.error)),
-              )),
+          Column(
+            children: [
+              SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0)),
+                    child: CachedNetworkImage(
+                        imageUrl:
+                            "${StringUtil.imgMediumUrl}${result.restaurant?.pictureId ?? ""}",
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error)),
+                  )),
+              Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: FloatingActionButton(
+                    onPressed: () => {}, child: const Icon(Icons.star)),
+              )
+            ],
+          ),
           const Padding(
               padding: EdgeInsets.only(left: 8, top: 16),
               child: Text("Location")),
@@ -94,8 +101,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 ],
               )),
           const Padding(
-              padding: EdgeInsets.only(left: 8, top: 16),
-              child: Text("Foods")),
+              padding: EdgeInsets.only(left: 8, top: 16), child: Text("Foods")),
           Padding(
               padding: const EdgeInsets.only(left: 8, top: 4),
               child: SizedBox(
@@ -106,13 +112,11 @@ class _DetailScreenState extends State<DetailScreen> {
                       itemBuilder: (context, index) {
                         final foods = result.restaurant?.menus.foods[index];
                         return Padding(
-                            padding:
-                            const EdgeInsets.only(left: 2, right: 2),
+                            padding: const EdgeInsets.only(left: 2, right: 2),
                             child: Chip(label: Text(foods?.name ?? "-")));
                       }))),
           const Padding(
-              padding: EdgeInsets.only(left: 8, top: 8),
-              child: Text("Drinks")),
+              padding: EdgeInsets.only(left: 8, top: 8), child: Text("Drinks")),
           Padding(
               padding: const EdgeInsets.only(left: 8, top: 4),
               child: SizedBox(
@@ -134,5 +138,4 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
     );
   }
-
 }
