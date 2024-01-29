@@ -34,7 +34,7 @@ class RestaurantEntity {
     city: json["city"],
     address: json["address"],
     pictureId: json["pictureId"],
-    rating: json["rating"]
+    rating: json["rating"]?.toDouble()
   );
 
 }

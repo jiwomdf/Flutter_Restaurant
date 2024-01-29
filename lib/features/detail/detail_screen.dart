@@ -114,7 +114,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                   city: result.restaurant?.city ?? "",
                                   address: result.restaurant?.address ?? "",
                                   pictureId: result.restaurant?.pictureId ?? "",
-                                  rating: result.restaurant?.rating ?? 0.0
+                                  rating: result.restaurant?.rating ?? 0
                               ))
                             }
                           },

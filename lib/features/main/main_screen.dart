@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fundamental_beginner_restourant/domain/data/local/db_service.dart';
+import 'package:fundamental_beginner_restourant/features/favorite/favotire_restaurant_screen.dart';
 import 'package:fundamental_beginner_restourant/features/main/restaurant_db_provider.dart';
 import 'package:fundamental_beginner_restourant/features/main/restaurant_provider.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
 
   Timer? _debounce;
-  late final RestaurantProvider _provider;
+  RestaurantProvider? _provider;
 
   @override
   void dispose() {
@@ -40,14 +41,21 @@ class _MainScreenState extends State<MainScreen> {
               .colorScheme
               .inversePrimary,
           title: Text(widget.title),
+          actions: [
+            IconButton(icon: const Icon(Icons.star_rate_sharp), onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return FavoriteRestaurantScreen();
+              }));
+            })
+          ]
         ),
         body: MultiProvider(
           providers: [
             ChangeNotifierProvider<RestaurantProvider>(
               create: (_) {
                 _provider = RestaurantProvider(apiService: widget.apiService);
-                _provider.fetchRestaurants("");
-                return _provider;
+                _provider?.fetchRestaurants("");
+                return _provider!;
               },
             )
           ],
@@ -109,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      _provider.fetchRestaurants(value);
+      _provider?.fetchRestaurants(value);
     });
   }
 
