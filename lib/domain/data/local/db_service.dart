@@ -3,14 +3,16 @@ import 'package:path/path.dart' show join;
 import 'entity/restaurant_entity.dart';
 
 class DbService {
+  static DbService? _instance;
   static late Database _database;
+
+  DbService._internal() {
+    _instance = this;
+  }
+  factory DbService() => _instance ?? DbService._internal();
+
   static const String _dbName = 'note_db.db';
   static const String _tableRestaurant = 'restaurant';
-
-  Future<Database> get database async {
-    _database = await _initializeDb();
-    return _database;
-  }
 
   Future<Database> _initializeDb() async {
     var path = await getDatabasesPath();
@@ -19,14 +21,25 @@ class DbService {
       onCreate: (db, version) async {
         await db.execute(
           '''CREATE TABLE $_tableRestaurant (
-             id INTEGER PRIMARY KEY,
-             title TEXT, description TEXT
+             id TEXT,
+             title TEXT,
+             name TEXT,
+             description TEXT,
+             city TEXT,
+             address TEXT,
+             pictureId TEXT,
+             rating NUMERIC
            )''',
         );
       },
       version: 1,
     );
     return db;
+  }
+
+  Future<Database> get database async {
+    _database = await _initializeDb();
+    return _database;
   }
 
   Future<void> insertRestaurant(RestaurantEntity restaurantEntity) async {

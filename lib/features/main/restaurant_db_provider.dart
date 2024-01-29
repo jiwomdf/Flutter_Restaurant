@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:fundamental_beginner_restourant/domain/data/local/db_service.dart';
 
@@ -20,38 +18,52 @@ class RestaurantDbProvider extends ChangeNotifier {
   List<RestaurantEntity> _restaurants = [];
   List<RestaurantEntity> get restaurants => _restaurants;
 
-  Future<void> insertRestaurants(RestaurantEntity restaurantEntity) async {
-    await dbService.insertRestaurant(restaurantEntity);
+  bool _isFavRestaurants = false;
+  bool get isFavRestaurants => _isFavRestaurants;
+
+  Future<void> insertFavRestaurant(RestaurantEntity restaurantEntity) async {
+    try {
+      await dbService.insertRestaurant(restaurantEntity);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
-  Future<void> getRestaurant() async {
-    _restaurants = await dbService.getRestaurant();
-    if (_restaurants.isNotEmpty) {
-      _state = ResultState.hasData;
-    } else {
+  Future<void> getFavRestaurant() async {
+    try {
+      _restaurants = await dbService.getRestaurant();
+      if (_restaurants.isNotEmpty) {
+        _state = ResultState.hasData;
+      } else {
+        _state = ResultState.noData;
+        _message = 'Empty Data';
+      }
+    } catch (e) {
       _state = ResultState.noData;
-      _message = 'Empty Data';
+      _message = e.toString();
     }
     notifyListeners();
   }
 
-  Future<bool> getIsRestaurantFav({required String id}) async {
+  Future<void> getIsRestaurantFav(String id) async {
     try {
       final restaurants = await dbService.getRestaurantById(id);
       if (restaurants.isNotEmpty) {
-        return true;
+        _isFavRestaurants = true;
       } else {
-        return false;
+        _isFavRestaurants = false;
       }
     } catch (e) {
-      return false;
+      _isFavRestaurants = false;
     }
+    notifyListeners();
+    getIsRestaurantFav(id);
   }
 
-  Future<void> removeRestaurant(String id) async {
+  Future<void> removeFavRestaurant({required String id}) async {
     try {
       await dbService.removeRestaurant(id);
-      getRestaurant();
+      getIsRestaurantFav(id);
     } catch (e) {
       _state = ResultState.error;
       _message = 'Error: $e';

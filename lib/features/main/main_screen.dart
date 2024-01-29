@@ -24,7 +24,6 @@ class _MainScreenState extends State<MainScreen> {
 
   Timer? _debounce;
   late final RestaurantProvider _provider;
-  late final RestaurantDbProvider _dbProvider;
 
   @override
   void dispose() {
@@ -50,11 +49,7 @@ class _MainScreenState extends State<MainScreen> {
                 _provider.fetchRestaurants("");
                 return _provider;
               },
-            ),
-            ChangeNotifierProvider<RestaurantDbProvider>(create: (_) {
-              _dbProvider = RestaurantDbProvider(dbService: widget.dbService);
-              return _dbProvider;
-            })
+            )
           ],
           child: Column(
             children: [
