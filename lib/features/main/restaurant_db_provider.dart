@@ -63,12 +63,12 @@ class RestaurantDbProvider extends ChangeNotifier {
   Future<void> removeFavRestaurant({required String id}) async {
     try {
       await dbService.removeRestaurant(id);
-      getIsRestaurantFav(id);
     } catch (e) {
       _state = ResultState.error;
       _message = 'Error: $e';
       notifyListeners();
     }
+    getIsRestaurantFav(id);
   }
 
 }

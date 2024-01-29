@@ -102,7 +102,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       padding: const EdgeInsets.only(top: 10),
                       child: FloatingActionButton.small(
                           shape: const CircleBorder(),
-                          backgroundColor: Colors.black,
+                          backgroundColor: getFavoriteBgColor(provider.isFavRestaurants),
                           onPressed: () => {
                             if(provider.isFavRestaurants) {
                               _dbProvider?.removeFavRestaurant(id: result.restaurant?.id ?? "")
@@ -118,7 +118,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               ))
                             }
                           },
-                          child: Icon(Icons.star, color: getFavoriteBgColor(provider.isFavRestaurants))),
+                          child: Icon(Icons.star, color: Colors.white)),
                     )
                   ],
                 ),
@@ -191,7 +191,7 @@ class _DetailScreenState extends State<DetailScreen> {
     if(isFavorite)  {
       return Colors.redAccent;
     } else {
-      return Colors.white;
+      return Colors.black;
     }
   }
 }
