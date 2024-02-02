@@ -4,6 +4,7 @@ import 'package:fundamental_beginner_restourant/domain/data/local/db_service.dar
 import 'package:provider/provider.dart';
 import '../../domain/data/api/response/restaurant_element.dart';
 import '../../util/state/ResultState.dart';
+import '../detail/detail_screen.dart';
 import '../main/list/list_restaurants_container.dart';
 import '../main/restaurant_db_provider.dart';
 
@@ -22,13 +23,20 @@ class _FavoriteRestaurantScreenState extends State<FavoriteRestaurantScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme
+                  .of(context)
+                  .colorScheme
+                  .inversePrimary,
+              title: const Text("Favorite")
+          ),
           body: ChangeNotifierProvider<RestaurantDbProvider>(
-            create:  (_) {
-              _provider = RestaurantDbProvider(dbService: DbService());
-              _provider?.getFavRestaurant();
-              return _provider!;
-            },
-            child: _favoriteList()
+              create:  (_) {
+                _provider = RestaurantDbProvider(dbService: DbService());
+                _provider?.getFavRestaurant();
+                return _provider!;
+              },
+              child: _favoriteList()
           )
         )
     );
@@ -51,7 +59,13 @@ class _FavoriteRestaurantScreenState extends State<FavoriteRestaurantScreen> {
                     city: state.restaurants[index].city,
                     pictureId: state.restaurants[index].pictureId,
                     rating: 0.0,
-                  ));
+                  ),
+                    onTap: (id) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return DetailScreen(id: id);
+                      }));
+                    },
+                  );
                 },
               );
             case ResultState.noData:

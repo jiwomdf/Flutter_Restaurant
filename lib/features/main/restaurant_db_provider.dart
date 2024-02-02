@@ -9,8 +9,8 @@ class RestaurantDbProvider extends ChangeNotifier {
 
   RestaurantDbProvider({required this.dbService});
 
-  late ResultState _state;
-  ResultState get state => _state;
+  ResultState? _state;
+  ResultState? get state => _state;
 
   String _message = '';
   String get message => _message;

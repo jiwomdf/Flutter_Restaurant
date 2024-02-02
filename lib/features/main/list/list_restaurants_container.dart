@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:fundamental_beginner_restourant/features/detail/detail_screen.dart';
 import 'package:fundamental_beginner_restourant/util/ext/StringExt.dart';
 import '../../../domain/data/api/response/restaurant_element.dart';
 import '../../../util/stringutil/string_util.dart';
 
 class ListRestaurantContainer extends StatelessWidget {
   final Restaurant restaurant;
+  final Function(String id) onTap;
 
-  const ListRestaurantContainer({super.key, required this.restaurant});
+  const ListRestaurantContainer({super.key, required this.restaurant, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +16,7 @@ class ListRestaurantContainer extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return DetailScreen(id: restaurant.id);
-              }));
+              onTap(restaurant.id);
             },
             child: Row(
               children: [

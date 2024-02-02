@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fundamental_beginner_restourant/domain/data/local/db_service.dart';
 import 'package:fundamental_beginner_restourant/features/favorite/favotire_restaurant_screen.dart';
-import 'package:fundamental_beginner_restourant/features/main/restaurant_db_provider.dart';
 import 'package:fundamental_beginner_restourant/features/main/restaurant_provider.dart';
 import 'package:provider/provider.dart';
+import '../detail/detail_screen.dart';
 import 'list/list_restaurants_container.dart';
 import '../../domain/data/api/api_service.dart';
 import '../../util/state/ResultState.dart';
@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
           actions: [
             IconButton(icon: const Icon(Icons.star_rate_sharp), onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return FavoriteRestaurantScreen();
+                return const FavoriteRestaurantScreen();
               }));
             })
           ]
@@ -82,7 +82,14 @@ class _MainScreenState extends State<MainScreen> {
                   child: ListView.builder(
                     itemCount: state.result.restaurants.length,
                     itemBuilder: (context, index) {
-                      return ListRestaurantContainer(restaurant: state.result.restaurants[index]);
+                      return ListRestaurantContainer(
+                        restaurant: state.result.restaurants[index],
+                        onTap: (id){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            return DetailScreen(id: id);
+                          }));
+                        },
+                      );
                     },
                   ),
                 ),
