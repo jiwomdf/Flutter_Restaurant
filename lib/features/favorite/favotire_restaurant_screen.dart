@@ -30,11 +30,11 @@ class _FavoriteRestaurantScreenState extends State<FavoriteRestaurantScreen> {
                   .inversePrimary,
               title: const Text("Favorite")
           ),
-          body: ChangeNotifierProvider<RestaurantDbProvider>(
+          body: ChangeNotifierProvider<RestaurantDbProvider?>(
               create:  (_) {
                 _provider = RestaurantDbProvider(dbService: DbService());
                 _provider?.getFavRestaurant();
-                return _provider!;
+                return _provider;
               },
               child: _favoriteList()
           )
@@ -58,12 +58,14 @@ class _FavoriteRestaurantScreenState extends State<FavoriteRestaurantScreen> {
                     description: state.restaurants[index].description,
                     city: state.restaurants[index].city,
                     pictureId: state.restaurants[index].pictureId,
-                    rating: 0.0,
+                    rating: state.restaurants[index].rating,
                   ),
-                    onTap: (id) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return DetailScreen(id: id);
-                      }));
+                    onTap: (id) async {
+                      var result = await Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => DetailScreen(id: id)));
+                      if(result == DetailScreen.navigatorCallback) {
+                        _provider?.getFavRestaurant();
+                      }
                     },
                   );
                 },

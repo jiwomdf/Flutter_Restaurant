@@ -11,6 +11,8 @@ import '../../util/state/ResultState.dart';
 import '../../util/stringutil/string_util.dart';
 
 class DetailScreen extends StatefulWidget {
+  static const String navigatorCallback = "navigator_callback_value";
+
   final String id;
 
   const DetailScreen({super.key, required this.id});
@@ -24,14 +26,6 @@ class _DetailScreenState extends State<DetailScreen> {
   RestaurantDbProvider? _dbProvider;
 
   @override
-  void initState() {
-    if(_dbProvider != null) {
-      _dbProvider?.getIsRestaurantFav(widget.id);
-    }
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
@@ -40,32 +34,39 @@ class _DetailScreenState extends State<DetailScreen> {
                 return DetailRestaurantProvider(id: widget.id, apiService: ApiService());
               }
           ),
-          ChangeNotifierProvider<RestaurantDbProvider>(
+          ChangeNotifierProvider<RestaurantDbProvider?>(
               create: (_) {
                 _dbProvider = RestaurantDbProvider(dbService: DbService());
                 _dbProvider?.getIsRestaurantFav(widget.id);
-                return _dbProvider!;
+                return _dbProvider;
               }
           )
         ],
-      child: _detailScreenState(),
+      child: _detailScreenState(context),
     );
   }
 
-  Widget _detailScreenState(){
+  Widget _detailScreenState(BuildContext buildContext){
     return Consumer<DetailRestaurantProvider>(builder: (context, state, _) {
       if (state.state == ResultState.loading) {
         return const Center(child: CircularProgressIndicator());
       } else if (state.state == ResultState.hasData) {
-        return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              title: Text(state.result.restaurant?.name ?? "-"),
-            ),
-            body: Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: _successDetailScreen(state.result),
-            ));
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) async {
+            if (mounted) Navigator.of(context).pop(DetailScreen.navigatorCallback);
+          },
+          child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Theme.of(buildContext).colorScheme.inversePrimary,
+                title: Text(state.result.restaurant?.name ?? "-"),
+              ),
+              body: Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: _successDetailScreen(state.result),
+              )
+          )
+        );
       } else if (state.state == ResultState.noData) {
         return const Center(child: CircularProgressIndicator());
       } else if (state.state == ResultState.error) {
@@ -77,7 +78,7 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Widget _successDetailScreen(RestaurantDetailElement result) {
-    return Consumer<RestaurantDbProvider>(
+    return Consumer<RestaurantDbProvider?>(
         builder: (context, provider, child) {
           return SingleChildScrollView(
             scrollDirection: Axis.vertical,
@@ -102,9 +103,9 @@ class _DetailScreenState extends State<DetailScreen> {
                       padding: const EdgeInsets.only(top: 10),
                       child: FloatingActionButton.small(
                           shape: const CircleBorder(),
-                          backgroundColor: getFavoriteBgColor(provider.isFavRestaurants),
+                          backgroundColor: getFavoriteBgColor(provider?.isFavRestaurants ?? false),
                           onPressed: () => {
-                            if(provider.isFavRestaurants) {
+                            if(provider?.isFavRestaurants ?? false) {
                               _dbProvider?.removeFavRestaurant(id: result.restaurant?.id ?? "")
                             } else {
                               _dbProvider?.insertFavRestaurant(RestaurantEntity(
@@ -118,7 +119,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               ))
                             }
                           },
-                          child: Icon(Icons.star, color: Colors.white)),
+                          child: const Icon(Icons.star, color: Colors.white)),
                     )
                   ],
                 ),

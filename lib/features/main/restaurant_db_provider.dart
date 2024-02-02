@@ -21,14 +21,6 @@ class RestaurantDbProvider extends ChangeNotifier {
   bool _isFavRestaurants = false;
   bool get isFavRestaurants => _isFavRestaurants;
 
-  Future<void> insertFavRestaurant(RestaurantEntity restaurantEntity) async {
-    try {
-      await dbService.insertRestaurant(restaurantEntity);
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
   Future<void> getFavRestaurant() async {
     try {
       _restaurants = await dbService.getRestaurant();
@@ -57,17 +49,19 @@ class RestaurantDbProvider extends ChangeNotifier {
       _isFavRestaurants = false;
     }
     notifyListeners();
-    getIsRestaurantFav(id);
+  }
+
+  Future<void> insertFavRestaurant(RestaurantEntity restaurantEntity) async {
+    try {
+      await dbService.insertRestaurant(restaurantEntity);
+    } catch (e) {}
+    getIsRestaurantFav(restaurantEntity.id);
   }
 
   Future<void> removeFavRestaurant({required String id}) async {
     try {
       await dbService.removeRestaurant(id);
-    } catch (e) {
-      _state = ResultState.error;
-      _message = 'Error: $e';
-      notifyListeners();
-    }
+    } catch (e) {}
     getIsRestaurantFav(id);
   }
 
