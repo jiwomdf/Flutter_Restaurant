@@ -5,6 +5,7 @@ import 'package:fundamental_beginner_restourant/features/favorite/favotire_resta
 import 'package:fundamental_beginner_restourant/features/main/restaurant_provider.dart';
 import 'package:provider/provider.dart';
 import '../detail/detail_screen.dart';
+import '../settings/SettingScreen.dart';
 import 'list/list_restaurants_container.dart';
 import '../../domain/data/api/api_service.dart';
 import '../../util/state/ResultState.dart';
@@ -45,6 +46,11 @@ class _MainScreenState extends State<MainScreen> {
             IconButton(icon: const Icon(Icons.star_rate_sharp), onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return const FavoriteRestaurantScreen();
+              }));
+            }),
+            IconButton(icon: const Icon(Icons.settings), onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const SettingScreen();
               }));
             })
           ]
