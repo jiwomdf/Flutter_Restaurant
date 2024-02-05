@@ -23,8 +23,6 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
 
-  RestaurantDbProvider? _dbProvider;
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -36,9 +34,9 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
           ChangeNotifierProvider<RestaurantDbProvider?>(
               create: (_) {
-                _dbProvider = RestaurantDbProvider(dbService: DbService());
-                _dbProvider?.getIsRestaurantFav(widget.id);
-                return _dbProvider;
+                var dbProvider = RestaurantDbProvider(dbService: DbService());
+                dbProvider.getIsRestaurantFav(widget.id);
+                return dbProvider;
               }
           )
         ],
@@ -78,7 +76,7 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Widget _successDetailScreen(RestaurantDetailElement result) {
-    return Consumer<RestaurantDbProvider?>(
+    return Consumer<RestaurantDbProvider>(
         builder: (context, provider, child) {
           return SingleChildScrollView(
             scrollDirection: Axis.vertical,
@@ -106,9 +104,9 @@ class _DetailScreenState extends State<DetailScreen> {
                           backgroundColor: getFavoriteBgColor(provider?.isFavRestaurants ?? false),
                           onPressed: () => {
                             if(provider?.isFavRestaurants ?? false) {
-                              _dbProvider?.removeFavRestaurant(id: result.restaurant?.id ?? "")
+                              provider.removeFavRestaurant(id: result.restaurant?.id ?? "")
                             } else {
-                              _dbProvider?.insertFavRestaurant(RestaurantEntity(
+                              provider.insertFavRestaurant(RestaurantEntity(
                                   id: result.restaurant?.id ?? "",
                                   name: result.restaurant?.name ?? "",
                                   description: result.restaurant?.description ?? "",

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:fundamental_beginner_restourant/domain/data/local/db_service.dart';
 import 'package:fundamental_beginner_restourant/features/favorite/favotire_restaurant_screen.dart';
 import 'package:fundamental_beginner_restourant/features/main/restaurant_provider.dart';
+import 'package:fundamental_beginner_restourant/features/main/widget/list_restaurants_container.dart';
 import 'package:provider/provider.dart';
 import '../detail/detail_screen.dart';
 import '../settings/SettingScreen.dart';
-import 'list/list_restaurants_container.dart';
 import '../../domain/data/api/api_service.dart';
 import '../../util/state/ResultState.dart';
 
