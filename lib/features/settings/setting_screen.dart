@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart';
 import '../../util/notification/notification_helper.dart';
-import '../detail/detail_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   static const routeName = '/setting_screen';
@@ -20,18 +19,6 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
 
   final NotificationHelper _notificationHelper = NotificationHelper();
-
-  @override
-  void initState() {
-    super.initState();
-    _notificationHelper.configureSelectNotificationSubject(DetailScreen.routeName);
-  }
-
-  @override
-  void dispose() {
-    selectNotificationSubject.close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +65,10 @@ class _SettingScreenState extends State<SettingScreen> {
                             onChanged: (value) async {
                               if (Platform.isIOS) {
                               } else {
-                                provider.scheduleRestaurant(true);
+                                provider.scheduleRestaurant(value);
                                 provider.setDailyRestaurantRecommendation(value);
                                 await _notificationHelper
-                                    .showScheduleOnNotification(flutterLocalNotificationsPlugin);
+                                    .showScheduleOnNotification(flutterLocalNotificationsPlugin, value);
                               }
                             },
                           )

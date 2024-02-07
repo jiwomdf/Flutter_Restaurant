@@ -37,8 +37,8 @@ class NotificationHelper {
         onSelectNotification: (String? payload) async {
           if (payload != null) {
             log('notification payload: $payload');
+            selectNotificationSubject.add(payload);
           }
-          selectNotificationSubject.add(payload ?? 'empty payload');
         });
   }
 
@@ -77,7 +77,9 @@ class NotificationHelper {
   }
 
   Future<void> showScheduleOnNotification(
-      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+      bool isRestaurantScheduleActive
+  ) async {
     var channelId = "2";
     var channelName = "channel_02";
     var channelDescription = "Schedule On Channel";
@@ -94,11 +96,14 @@ class NotificationHelper {
 
     var iOSPlatformChannelSpecifics = const IOSNotificationDetails();
 
-    var titleNotification = "Schedule Notification is on";
+
+    var isOnText = isRestaurantScheduleActive == true ? "On" : "Of";
+    var titleNotification = "Recommendation restaurant schedule is $isOnText";
+    var titleNotificationDsc = "The schedule recomendation Notification is now $isOnText";
     await flutterLocalNotificationsPlugin.show(
         1,
         titleNotification,
-        null,
+        titleNotificationDsc,
         NotificationDetails(
             android: androidPlatformChannelSpecifics,
             iOS: iOSPlatformChannelSpecifics
