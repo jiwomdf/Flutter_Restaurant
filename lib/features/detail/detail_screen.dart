@@ -11,6 +11,7 @@ import '../../util/state/ResultState.dart';
 import '../../util/stringutil/string_util.dart';
 
 class DetailScreen extends StatefulWidget {
+  static const routeName = '/detail_screen';
   static const String navigatorCallback = "navigator_callback_value";
 
   final String id;

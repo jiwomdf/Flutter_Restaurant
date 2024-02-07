@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:fundamental_beginner_restourant/domain/data/api/response/restaurant_detail_element.dart';
 import 'package:fundamental_beginner_restourant/domain/data/api/response/restaurant_element.dart';
 import 'package:http/http.dart' as http;

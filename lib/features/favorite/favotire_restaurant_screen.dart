@@ -9,6 +9,7 @@ import '../main/restaurant_db_provider.dart';
 import '../main/widget/list_restaurants_container.dart';
 
 class FavoriteRestaurantScreen extends StatefulWidget {
+  static const routeName = '/favorite_restaurant_screen';
 
   const FavoriteRestaurantScreen({super.key});
 
@@ -60,8 +61,8 @@ class _FavoriteRestaurantScreenState extends State<FavoriteRestaurantScreen> {
                     rating: provider.restaurants[index].rating,
                   ),
                     onTap: (id) async {
-                      var result = await Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => DetailScreen(id: id)));
+                      var result = await Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => DetailScreen(id: id)));
                       if(result == DetailScreen.navigatorCallback) {
                         provider.getFavRestaurant();
                       }

@@ -5,12 +5,14 @@ import 'package:fundamental_beginner_restourant/features/favorite/favotire_resta
 import 'package:fundamental_beginner_restourant/features/main/restaurant_provider.dart';
 import 'package:fundamental_beginner_restourant/features/main/widget/list_restaurants_container.dart';
 import 'package:provider/provider.dart';
+import '../../common/navigation.dart';
 import '../detail/detail_screen.dart';
-import '../settings/SettingScreen.dart';
+import '../settings/setting_screen.dart';
 import '../../domain/data/api/api_service.dart';
 import '../../util/state/ResultState.dart';
 
 class MainScreen extends StatefulWidget {
+  static const routeName = '/main_screen';
 
   final String title;
   final ApiService apiService;
@@ -44,14 +46,10 @@ class _MainScreenState extends State<MainScreen> {
           title: Text(widget.title),
           actions: [
             IconButton(icon: const Icon(Icons.star_rate_sharp), onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const FavoriteRestaurantScreen();
-              }));
+              Navigation.intent(FavoriteRestaurantScreen.routeName);
             }),
             IconButton(icon: const Icon(Icons.settings), onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const SettingScreen();
-              }));
+              Navigation.intent(SettingScreen.routeName);
             })
           ]
         ),
@@ -91,9 +89,7 @@ class _MainScreenState extends State<MainScreen> {
                       return ListRestaurantContainer(
                         restaurant: state.result.restaurants[index],
                         onTap: (id){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) {
-                            return DetailScreen(id: id);
-                          }));
+                          Navigation.intentWithData(DetailScreen.routeName, id);
                         },
                       );
                     },
