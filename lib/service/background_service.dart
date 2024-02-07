@@ -1,7 +1,6 @@
-import 'dart:developer';
 import 'dart:isolate';
+import 'dart:math';
 import 'dart:ui';
-
 import '../domain/data/api/api_service.dart';
 import '../main.dart';
 import '../util/notification/notification_helper.dart';
@@ -27,14 +26,12 @@ class RestaurantScheduleBackgroundService {
   }
 
   static Future<void> callback() async {
-    log('Alarm fired!');
     final NotificationHelper notificationHelper = NotificationHelper();
     var result = await ApiService().getRestaurants();
-    var restaurant = result.restaurants.firstOrNull;
-    if(restaurant != null) {
-      await notificationHelper.showScheduleNotification(flutterLocalNotificationsPlugin, restaurant);
-    }
-    _uiSendPort ??= IsolateNameServer.lookupPortByName(_isolateName);
+    int randomNumber = Random().nextInt(result.restaurants.length - 1); // from 0 upto 99 included
+    var restaurant = result.restaurants[randomNumber];
+    await notificationHelper.showScheduleNotification(flutterLocalNotificationsPlugin, restaurant);
+      _uiSendPort ??= IsolateNameServer.lookupPortByName(_isolateName);
     _uiSendPort?.send(null);
   }
 }

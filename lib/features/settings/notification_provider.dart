@@ -17,10 +17,10 @@ class NotificationProvider extends ChangeNotifier {
     if (_isRestaurantScheduleActive) {
       notifyListeners();
       return await AndroidAlarmManager.periodic(
-        const Duration(hours: 24),
+        const Duration(seconds: 10),
         1,
         RestaurantScheduleBackgroundService.callback,
-        startAt: DateTimeHelper.format(),
+        startAt: DateTime.now(),
         exact: true,
         wakeup: true,
       );

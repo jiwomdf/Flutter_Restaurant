@@ -6,6 +6,7 @@ import 'package:fundamental_beginner_restourant/features/main/restaurant_provide
 import 'package:fundamental_beginner_restourant/features/main/widget/list_restaurants_container.dart';
 import 'package:provider/provider.dart';
 import '../../common/navigation.dart';
+import '../../util/notification/notification_helper.dart';
 import '../detail/detail_screen.dart';
 import '../settings/setting_screen.dart';
 import '../../domain/data/api/api_service.dart';
@@ -25,12 +26,21 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final NotificationHelper _notificationHelper = NotificationHelper();
 
   Timer? _debounce;
   RestaurantProvider? _provider;
 
   @override
+  void initState() {
+    super.initState();
+    _notificationHelper
+        .configureSelectNotificationSubject(DetailScreen.routeName);
+  }
+
+  @override
   void dispose() {
+    selectNotificationSubject.close();
     _debounce?.cancel();
     super.dispose();
   }
