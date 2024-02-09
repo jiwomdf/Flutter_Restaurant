@@ -10,7 +10,9 @@ import '../../domain/data/api/api_service.dart';
 import '../../util/state/ResultState.dart';
 import '../../util/stringutil/string_util.dart';
 
-class DetailScreen extends StatefulWidget {
+
+class DetailScreen extends StatelessWidget {
+
   static const routeName = '/detail_screen';
   static const String navigatorCallback = "navigator_callback_value";
 
@@ -19,24 +21,18 @@ class DetailScreen extends StatefulWidget {
   const DetailScreen({super.key, required this.id});
 
   @override
-  State<DetailScreen> createState() => _DetailScreenState();
-}
-
-class _DetailScreenState extends State<DetailScreen> {
-
-  @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<DetailRestaurantProvider>(
               create: (_) {
-                return DetailRestaurantProvider(id: widget.id, apiService: ApiService());
+                return DetailRestaurantProvider(id: id, apiService: ApiService());
               }
           ),
           ChangeNotifierProvider<RestaurantDbProvider?>(
               create: (_) {
                 var dbProvider = RestaurantDbProvider(dbService: DbService());
-                dbProvider.getIsRestaurantFav(widget.id);
+                dbProvider.getIsRestaurantFav(id);
                 return dbProvider;
               }
           )
@@ -53,7 +49,7 @@ class _DetailScreenState extends State<DetailScreen> {
         return PopScope(
           canPop: false,
           onPopInvoked: (didPop) async {
-            if (mounted) Navigator.of(context).pop(DetailScreen.navigatorCallback);
+            Navigator.of(context).pop(DetailScreen.navigatorCallback);
           },
           child: Scaffold(
               appBar: AppBar(
